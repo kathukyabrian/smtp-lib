@@ -65,3 +65,13 @@
 - entire, fully qualified domain name(FQDNs)
 
 #### Buffer and State Table
+- SMTP sessions are stateful - both parties maintain a common view of the current state
+- model - virtual 'buffer' and a 'state table' on the server that may be used by client to:
+    - clear the buffer
+    - reset the state table
+
+
+#### Commands and Replies
+- commands are transmitted from the sender to the receiver via the transmission line
+- a reply is an ACK(negative or positive) sent in lines from receiver to sender in response to a command.
+- general form of a reply is a numeric completion code usually followed by a text string
