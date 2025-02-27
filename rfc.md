@@ -75,3 +75,35 @@
 - commands are transmitted from the sender to the receiver via the transmission line
 - a reply is an ACK(negative or positive) sent in lines from receiver to sender in response to a command.
 - general form of a reply is a numeric completion code usually followed by a text string
+
+#### Lines
+- contain zero or more characters terminated by CR(hex 0D) followed immediately by LF(hex 0A) - CRLF
+- limits may be imposed on line lengths by servers
+- CR or RF should not appear alone in mail bodies
+
+#### Message Content and Mail Data
+- describes the material transmitted after the DATA command is accepted and before the end of data indication is transmitted
+- includes message header section and the possibly structured message body
+
+#### Originator, Delivery, Relay and Gateway systems
+- originating system(SMTP originator) introduces mail into the internet(transport service environment)
+- delivery system is one that receives mail from a transport service environment and passes it to a mail user agent or deposits it into a message store that a mail user agent is expected to subsequently access
+- relay system receives mail from an SMTP client and transmits it, without modification to the message data other than adding trace information, to another SMTP server for further relaying or delivery
+- gateway system receives mail from a client system in one transport environment and transmits it to a server system in another transport environment
+
+#### Mailbox and Address
+- address is a character string that identifies a user to whom mail will be sent or a location into which mail will be deposited.
+- mailbox refers to that depository.
+- address consists of 
+    - user 
+    - domain
+
+### General Syntax Principles and Transaction Model
+- commands begin with a command verb
+- replies begin with a 3 digit numeric code
+- in some commands and replies, arguments are required following the verb or reply code
+- local part of mail box must be treated as case sensitive
+- mailbox domains are not case sensitive
+- argument clause consists of a variable-length character string ending with CRLF. receiver will not take action until this sequence is received.
+
+## The SMTP Procedures: Overview
