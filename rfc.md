@@ -107,3 +107,23 @@
 - argument clause consists of a variable-length character string ending with CRLF. receiver will not take action until this sequence is received.
 
 ## The SMTP Procedures: Overview
+### Session Initiation
+- a session is initiated when a client opens a connection to a server and the server responds with an opening message
+- SMTP server implementations MAY include identification of their software and version information in the connection greeting reply after the __220__ code
+- implementations MAY make provision for SMTP servers to disable the software and version announcement where it causes security concern
+- SMTP allows a server to formally reject a mail session while still allowing the initial connection
+  - a __554__ response may be given in the initial connection opening message instead of the 220
+  - a server taking this approach MUST still wait for the client to send a QUIT before closing the connection and SHOULD respond to any intervening commands with __503 bad sequence of commands__
+
+### Client Initiation
+- once the server has sent the greeting, welcoming message and the client has received it, the client sends an __EHLO__ command to the server indicating the client's identity
+- EHLO also indicates that the client is able to process service extensions and request that the server provides a list of the extensions it supports
+- older SMTP systems that are unable to support service extensions and contemporary clients that do not require service extensions may use the __HELO__ command instead
+- for a particular connection attempt, if the server returns a command not recognized response to EHLO, the client should be able to fallback to send HELO
+- in the EHLO command, the host sending the command identifies itself; can be interpreted as saying *Hello I am <domain> and (in the case of EHLO) I support service extension requests*
+
+### Mail Transactions
+- 3 steps:
+  -  __MAIL__ command - gives sender identification
+  - a series of 1 or more __RCPT__ commands - gives receiver information
+  - __DATA__ command - initiates transfer of the mail data, terminated by *end of mail* indicator
