@@ -127,3 +127,41 @@
   -  __MAIL__ command - gives sender identification
   - a series of 1 or more __RCPT__ commands - gives receiver information
   - __DATA__ command - initiates transfer of the mail data, terminated by *end of mail* indicator
+
+#### MAIL Command
+> ```MAIL FROM:<reverse-path> [ SP <mail-parameters>] <CRLF>```
+- this command tells the SMTP receiver that a new mail transaction is starting and that it resets all its state tables and buffers
+- the __reverse-path__ contains the source mailbox in between < and >
+- if accepted, the SMTP server responds with a __250 OK__ reply
+- if the mailbox specification is not acceptable the server MUST return a reply indicating whether the failure is permanent or temporary
+- there are certain circumstances in which the acceptability of the reverse path may not be determined until one or more forward paths can be examined
+- in such a case, the server MAY accept the reverse path with a 250 REPLY and then report the problems after the forward paths are received and examined - failures produce __550__ or __553__ replies
+- the optional mail parameters are associated with negotiated SMTP service extensions
+
+#### RCPT Command
+> ```RCPT TO:<forward-path> [ SP <rcpt-parameters>] <CRLF>```
+- the first or only argument to this command - forward-path, is a mailbox and domain always sorrounded by < and >. it identifies a recipient
+- if accepted, the server returns a __250 OK REPLY__ and stores the forward path
+- if the recipient is known not to be a deliverable address, the SMTP server returns a __550 REPLY__ typically with a string such as "no such user" and the mailbox name
+- the <forward-path> can contain more than just a mailbox
+- servers must be prepared to encounter a list of source routes in the forward path
+- if a RCPT command appears without a previous MAIL command the server must return a __503 Bad Sequence of Commands REPLY__
+- the optional <rcpt-parameters> are associated with negotiated SMTP service extensions
+
+
+- spaces are NOT permitted on either side of the colon following FROM in the mail command and TO in RCPT command
+
+#### DATA command
+> ```DATA <CRLF>```
+- if accepted the server returns a __354 Intermediate REPLY__ and considers all succeeding lines up to but not including the end of the mail data indicator to be the message text
+- when the end of the message is successfully received and stored, the SMTP receiver sends a 250 OK reply
+- since the mail data is sent on the transmission line, the end of the mail data must be indicated so that the command and reply dialog can be resumed.
+- SMTP indicates the end of the mail data by sending a line containing only a "."
+- end of mail indicator also confirms the mail transaction and tells the server to now process the stored recipients and mail data
+- if accepted the server returns a __250 OK REPLY__
+- DATA command can fail at only 2 points:
+  - if there was no MAIL or no RCPT command
+  - all such commands were rejected
+
+
+### Forwarding for address correction or updating
